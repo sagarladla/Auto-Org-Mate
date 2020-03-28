@@ -20,7 +20,7 @@ def main():
             
 
 def parse():
-    use="python autorgmate.py --src 'SOURCE_FOLDER' --dst 'DESTINATION_FOLDER' --file 'MP3'"
+    use="python {} --src 'SOURCE_FOLDER' --dst 'DESTINATION_FOLDER' --file 'MP3'".format(__file__)
     parser = argparse.ArgumentParser(prog=__file__, description="Tool to organize data in matter of secs.", usage=use)
     parser.add_argument('--src', help="Source path of disorganized data", action="store", dest="src", type=str)
     parser.add_argument('--dst', help="Destination path of disorganized data", action="store", dest="dst", type=str)
