@@ -4,18 +4,19 @@ import shutil
 import os
 
 def main():
+    # win_dir="\\"
     args=parse()
     files = populate_files(args.src)
     folder_dict = assign_folder(files, args.file_type)
     for folder, files in folder_dict.items():
-        new_folder="{}/{}".format(args.dst,folder)
+        new_folder="{}\{}".format(args.dst,folder)
         # Create folder
         if not os.path.exists(new_folder):
             os.makedirs(new_folder)
         # Move a file to folder
         elif os.path.exists(new_folder):
-            for file in files:
-                shutil.move(file,new_folder)
+            for infile in files:
+                shutil.move(infile,new_folder)
             
 
 def parse():
@@ -24,8 +25,7 @@ def parse():
     parser.add_argument('--src', help="Source path of disorganized data", action="store", dest="src", type=str)
     parser.add_argument('--dst', help="Destination path of disorganized data", action="store", dest="dst", type=str)
     parser.add_argument('--file', help="File type of data to deal with. Add one at a time", action="store", dest="file_type", type=str)
-    args=parser.parse_args()
-    return args
+    return parser.parse_args()
 
 # Populate list with absolute path of files
 def populate_files(src):
@@ -33,10 +33,11 @@ def populate_files(src):
     for root,dirs,filenames in os.walk(src):
         if not dirs:
             for filename in filenames:
-                file='{}/{}'.format(root,filename)
+                file='{}\\{}'.format(root,filename)
                 files.append(file)
     return files
 
+# Assign folder name to files
 def assign_folder(files, file_type):
     exe='exiftool.exe'
     folder_dict = dict()
@@ -50,14 +51,18 @@ def assign_folder(files, file_type):
         for output in process.stdout:
             meta=output.strip().split(":")
             metadata[meta[0].strip()]=meta[1].strip()
-
+        
         if file_type.upper() == 'MP3':
-            if metadata['File Type'] == file_type:
+            if metadata['File Type'] == file_type.upper():
                 # Assign file to a folder
                 if metadata['Album'] == '':
-                    folder_dict[metadata["Artist"]] = input_file
+                    if metadata['Artist'] not in folder_dict.keys():
+                        folder_dict[metadata["Artist"]]=list()
+                    folder_dict[metadata["Artist"]].append(input_file)
                 else:
-                    folder_dict[metadata['Album']] = input_file
+                    if metadata['Album'] not in folder_dict.keys():
+                        folder_dict[metadata["Album"]]=list()
+                    folder_dict[metadata['Album']].append(input_file)
             else:
                 continue
     return folder_dict
