@@ -9,4 +9,4 @@
 ### To do ..
 - Add support for various file types.
 - At a time processing of multiple file types.
-- Add parallelism/asyncio through files to speed up pipeline.
+- Add parallelism/asyncio through file handelling to speed up pipeline.
