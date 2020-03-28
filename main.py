@@ -61,3 +61,6 @@ def assign_folder(files, file_type):
             else:
                 continue
     return folder_dict
+
+if __name__ == "__main__":
+    main()
